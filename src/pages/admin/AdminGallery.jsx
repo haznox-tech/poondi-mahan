@@ -433,7 +433,7 @@ export default function AdminGallery() {
 
         await flushToCodebase();
 
-        setFormSuccess('Photo saved in this browser! Connect Cloudinary or GitHub to store images permanently in the cloud.');
+        setFormSuccess('Photo uploaded and saved to the server permanently. Cloudinary or GitHub are optional for CDN delivery or repo syncing.');
       }
 
       // Revoke the object URL used for preview
