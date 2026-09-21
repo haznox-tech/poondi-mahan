@@ -1,0 +1,58 @@
+export const poojaSchedule = [
+  {
+    id: 1,
+    titleEn: 'Temple Opening Time',
+    titleTa: 'திருக்கோவில் நடை திறக்கும் நேரம் (காலை)',
+    time: '05:00 AM',
+    highlight: false,
+  },
+  {
+    id: 2,
+    titleEn: 'Abhishekam',
+    titleTa: 'அபிஷேகம்',
+    time: '09:30 AM',
+    highlight: false,
+  },
+  {
+    id: 3,
+    titleEn: 'Maha Magalarthi',
+    titleTa: 'மகா மங்களாரத்தி (உச்சிக்காலம்)',
+    time: '10:00 AM',
+    highlight: true,
+  },
+  {
+    id: 4,
+    titleEn: 'Prasadam Distribution',
+    titleTa: 'பிரசாதம் & அன்னதானம் வழங்குதல்',
+    time: '10:15 AM',
+    highlight: false,
+  },
+  {
+    id: 5,
+    titleEn: 'Temple Closing Time',
+    titleTa: 'திருக்கோவில் நடை சாத்துதல் (மதியம்)',
+    time: '12:00 PM',
+    highlight: false,
+  },
+  {
+    id: 6,
+    titleEn: 'Temple Opening Time',
+    titleTa: 'திருக்கோவில் நடை திறக்கும் நேரம் (மாலை)',
+    time: '04:00 PM',
+    highlight: false,
+  },
+  {
+    id: 7,
+    titleEn: 'Evening Pooja and Magalaarthi',
+    titleTa: 'மாலை பூஜை & சாயரட்சை மங்களாரத்தி',
+    time: '06:00 PM',
+    highlight: true,
+  },
+  {
+    id: 8,
+    titleEn: 'Temple Closing Time',
+    titleTa: 'திருக்கோவில் இரவு நடை சாத்துதல்',
+    time: '08:00 PM',
+    highlight: false,
+  },
+];

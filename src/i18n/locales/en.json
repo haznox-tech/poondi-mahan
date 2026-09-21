@@ -1,0 +1,293 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "trustees": "Trustees",
+    "gallery": "Gallery",
+    "downloads": "Downloads",
+    "donation": "Donation",
+    "contact": "Contact",
+    "subtitle": "Attru Swamy Ashramam"
+  },
+  "common": {
+    "om": "ॐ",
+    "title": "Sri Poondi Mahan",
+    "subtitle": "Attru Swamy Ashramam",
+    "readMore": "Read More",
+    "readOnline": "Read Online",
+    "readOrDownload": "Read or Download",
+    "downloadPdf": "Download PDF",
+    "contactAndDirections": "Contact & Directions",
+    "supportAnnadanam": "Support Annadanam",
+    "supportSeva": "Support Annadanam Seva",
+    "viewAll": "View All",
+    "viewAllPhotos": "View All 35 Photos",
+    "exploreArchive": "Explore Complete Photo Archive",
+    "meetAllTrustees": "Meet all trustees",
+    "close": "Close",
+    "copied": "Copied",
+    "copy": "Copy",
+    "learnAboutMahan": "Learn About Sri Poondi Mahan",
+    "exploreGallery": "Explore the Gallery",
+    "addressTitle": "Sri Poondi Mahan Attru Swamy Ashramam Committee",
+    "addressLocation": "Poondi & Post, Kalasapakkam Taluk, Thiruvannamalai District, Tamil Nadu – 606751, India",
+    "allRightsReserved": "All rights reserved."
+  },
+  "home": {
+    "hero": {
+      "slide1Title": "Sri Poondi Mahan",
+      "slide1Subtitle": "Attru Swamy Ashramam — A Sanctuary of Tapas & Grace",
+      "slide1Desc": "Experience the divine presence of the revered sage of Kalasapakkam.",
+      "exploreHeritage": "Discover His Life",
+      "supportSeva": "Support Annadanam Seva"
+    },
+    "legacy": {
+      "overline": "Spiritual Heritage",
+      "heading": "The Eternal Flame of Devotion",
+      "quote": "\"He who served all without difference.\"",
+      "p1": "Sri Poondi Mahan — revered as Attru Swamy — was a realized sage whose life embodied the highest ideals of selfless service and spiritual devotion. Born in the sacred soil of Tamil Nadu, his journey from ordinary life to divine presence is a story that continues to inspire thousands.",
+      "p2": "Establishing the Attru Swamy Ashramam at Poondi near Kalasapakkam in Thiruvannamalai District, he created a sanctuary of peace where every soul was welcomed without distinction. His Annadanam Seva — the offering of free food — became the living expression of his teaching: that to serve humanity is to serve the Divine.",
+      "p3": "The committee established in his memory continues to carry forward this sacred mission, preserving his legacy through devotion, seva, and community service.",
+      "learnAbout": "Learn About Sri Poondi Mahan",
+      "exploreGallery": "Explore the Gallery"
+    },
+    "annadanam": {
+      "overline": "Sacred Seva",
+      "heading": "Annadanam — The Gift of Food",
+      "subheading": "Sri Poondi Mahan believed that feeding a hungry soul is the highest form of worship. The tradition of Annadanam Seva continues every day at the ashramam, nourishing all who come.",
+      "stat1Num": "365",
+      "stat1Label": "Days Annadanam",
+      "stat2Num": "1,10,000+",
+      "stat2Label": "Souls Served per year",
+      "supportButton": "Support Annadanam Seva",
+      "quoteTa": "\"அன்புடன் சேவை செய், எதையும் எதிர்பார்க்காதே.\"",
+      "quoteEn": "Serve with love, without expectation."
+    },
+    "trustees": {
+      "overline": "Leadership",
+      "heading": "Guiding the Path",
+      "meetAll": "Meet all trustees"
+    },
+    "gallery": {
+      "badge": "Sacred Glimpses · Holy Darshan",
+      "overline": "Moments of Grace",
+      "heading": "Ashramam Gallery",
+      "subheading": "Rare historic photographs of Sri Poondi Mahan, the sacred sanctum, daily puja aradhana, and the holy surroundings of Kalasapakkam.",
+      "viewAllBtn": "View All 35 Photos",
+      "exploreBtn": "Explore Complete Photo Archive"
+    },
+    "books": {
+      "overline": "Publications",
+      "heading": "Books & Sacred Texts",
+      "subheading": "Explore the life and teachings of Sri Poondi Mahan through available Tamil publications and devotional texts.",
+      "browseBtn": "Browse Books & Downloads",
+      "badge": "Tamil Publication",
+      "bookTitle": "Poondi Swamy",
+      "bookTitleTa": "பூண்டி சுவாமி",
+      "bookDesc": "A blessed biography recounting the divine life, tapas, and miracles of Sri Poondi Mahan.",
+      "readDownload": "Read or Download",
+      "readPdf": "Read PDF"
+    },
+    "visit": {
+      "overline": "Pilgrimage · Peace · Seva",
+      "heading": "Visit the Ashramam",
+      "button": "Contact & Directions"
+    }
+  },
+  "about": {
+    "heroTitle": "The Human Transmitter",
+    "heroSubtitle": "7 Surprising Lessons from the 18-Year Stillness of Sri Poondi Mahan (Attru Swamy)",
+    "quote": "\"We are like bulbs. But Poondi Swami is like transmitter. These bulbs will not glow unless that transmitter is switched on.\"",
+    "quoteAuthor": "— Jagadguru Sri Chandrasekharendra Saraswathi Swamigal (Kanchi Maha Periyavar)",
+    "exploreOverline": "Explore Further",
+    "exploreTitle": "Continue Exploring",
+    "link1Title": "Meet the Trustees",
+    "link1Desc": "Serving his legacy today with devotion",
+    "link2Title": "Explore the Gallery",
+    "link2Desc": "Sacred photographs and devotional moments",
+    "link3Title": "Support Annadanam",
+    "link3Desc": "Continue the unbroken tradition of seva",
+    "sections": {
+      "introOverline": "The Enigma of Poondi",
+      "introHeading": "1. The \"Madman\" on the Verandah",
+      "introP1": "In the dusty village of Poondi, tucked away in the spiritual shadow of Tiruvannamalai, there once lived a man who lived in defiance of every human convention. To a casual journalist passing through in the 1960s, the sight would have been jarring: a man sitting amidst grime and cactus, wearing layers of tattered shirts—one pulled over the other until he appeared physically bloated by rags. His hair was a matted nest of earth; his eyes were perpetually clouded with rheum, yet they possessed a \"sharp and shining\" quality that stopped onlookers in their tracks. He never bathed, rarely spoke, and appeared to the uninitiated as nothing more than a local madman.",
+      "introP2": "How did such a figure, who completely neglected the vessel of his own body, come to be hailed as a Samrat — an Emperor — among saints? Why did the most realized masters of the 20th century travel miles just to sit in his silent, unmoving presence? This exploration seeks to understand the \"Human Transmitter,\" Sri Poondi Mahan (also known as \"Attru Swamy\"), and distills the most impactful takeaways from a life defined by nearly two decades of absolute physical stillness.",
+      "transmitterOverline": "Kanchi Maha Periyavar's Revelation",
+      "transmitterHeading": "2. The Power of the \"Transmitter\" Analogy",
+      "transmitterP1": "One of the most sophisticated validations of Poondi Mahan’s spiritual stature came from the Kanchi Maha Periyavar, Sri Chandrasekharendra Saraswathi Swamigal. To explain Mahan’s state to his own devotees, the Kanchi Seer utilized a striking technological metaphor that remains the definitive description of the Swami's power. He made a clear distinction between a spiritual \"light\" and the source of the \"current\" itself: \"We are like bulbs. But Poondi Swami is like transmitter. These bulbs will not glow unless that transmitter is switched on.\"",
+      "transmitterP2": "In the complex hierarchy of Brahmasthithi — the state of being established in the Absolute — Poondi Mahan was viewed not as a teacher, but as the raw power source. This distinction is vital. While many saints provide a path or a \"light,\" Mahan was the \"Transmitter\" that allowed those bulbs to function. According to the ancient wisdom of Adi Shankara, a Brahmavarishtan (the highest of liberated beings) often appears to the world as child-like, mentally affected, or even \"haunted.\" Mahan embodied this paradox; he was a Samrat in the realm of consciousness while appearing as a mendicant in the realm of matter.",
+      "floodOverline": "Origin of Attru Swamy",
+      "floodHeading": "3. The Miracle of the Cheyyar River: Surviving the Flood",
+      "floodP1": "Before settling into permanent residence in the village, the Swami was often found in the dry bed of the Cheyyar River. He would sit in the blistering heat of the Indian summer on sands so hot they would sear the feet of any common traveler, yet he remained as composed as if he were resting on silk.",
+      "floodP2": "His specific Tamil honorific, Attru Swamy (River Swami), was derived from the word 'aaru' (river) following a terrifying natural event. During a season of heavy rains in the hills, a flash flood surged through the dry riverbed. Villagers, certain that the \"madman\" had been swept to a watery grave, rushed to the banks after the waters receded. They were met with a physical impossibility: they found the Swami buried up to his neck in the sand, alive, calm, and entirely unaffected by the deluge. This event served as a public demonstration of Ajakaravastha — the passive, immobile state where a master has transcended the survival instincts of the ego.",
+      "stillnessOverline": "The Python State (Ajakaravastha)",
+      "stillnessHeading": "4. Absolute Stillness: The 18-Year Verandah Residence",
+      "stillnessP1": "Around 1959 or 1960, Poondi Mahan ascended the raised porch of a house in Poondi and sat down. He would not leave that small space for eighteen years. This period is perhaps the most visceral account of spiritual penance in modern history. He did not move for his own needs; he did not feed himself; he simply was.",
+      "stillnessP2": "To understand the depth of his Ajakaravastha, one must look at the etymology: Ajagara refers to the \"python,\" a creature that remains in total stillness, waiting for providence. Mahan took this to the extreme of the \"python state.\" The most shocking evidence of his detachment from the flesh was the account of a colony of ants that burrowed into his leg. Because he remained immobile in deep yoga nishtha, the insects created a hole from his foot to his knee, consuming his flesh and blood. Witnesses were spellbound; the Swami remained in deep meditation, possessing \"not even the sense that he had a body.\" This total disregard for the physical frame is the ultimate counter-intuitive lesson of his life: that the \"Transmitter\" remains functional even as the \"hardware\" is ignored.",
+      "mirrorOverline": "Psychic Reflection & Leela",
+      "mirrorHeading": "5. The Transparent Mirror: Reflecting the Seeker",
+      "mirrorP1": "Mahan was often described as a \"Transparent Mirror.\" He possessed no fixed mood of his own; instead, he acted as a perfect psychic reflector for those who approached him. The record shows that if a photographer approached him with a timid or fearful expression, that exact look of fear would immediately manifest on the Swami’s face. If a visitor was friendly, he was friendly.",
+      "mirrorP2": "This \"Mirror\" phenomenon was a tool for leela (divine play) and spiritual correction. A notable account involves a young man who approached the Swami while secretly harboring greed—he was planning a second marriage solely for a dowry. As the man fed the Swami orange carpels, an impossible physical feat occurred: for every one carpel the man placed in the Swami's mouth, the Swami would spit out two. This continued until Mahan exposed the man’s hidden intent with a single, repeating phrase: \"He is expecting two in place of one... He is expecting two in place of one.\" Realizing his internal greed had been physically manifested and mirrored back to him, the man cancelled his plans. Mahan’s dharbar was open to all, but it was a court where one could not hide from their own reflection.",
+      "renunciationOverline": "Sand, Stones & Rejection of Wealth",
+      "renunciationHeading": "6. Transcendence Over Materiality: Sand, Stones, and Rejection of Wealth",
+      "renunciationP1": "Poondi Mahan’s existence was a sustained rejection of material laws. His diet was famously erratic; when not fed by devotees like a child, he was known to consume sand, cactus fruits, and even gravel stones. He maintained a total indifference to money; when wealthy visitors placed currency notes between his fingers, he remained motionless even as local children snatched the notes away.",
+      "renunciationP2": "Furthermore, the \"unspoiled offerings\" near his verandah defied the laws of biology. Heaps of fruits and flowers were left near him for years. While they would eventually dry, they reportedly never rotted, never produced a foul smell, and never attracted the typical signs of decay. Mahan’s own philosophy on wealth was absolute: \"I'm an alms-folk. I don't want money... It is not meant for me.\"",
+      "conclusionOverline": "Mahasamadhi & Eternal Radiance",
+      "conclusionHeading": "7. Conclusion: Beyond the Physical Frame",
+      "conclusionP1": "Sri Poondi Mahan attained Mahasamadhi in the early days of November 1978 (recorded by the ashram as November 3rd). Following his passing, heavy rains lashed the region for three days—a \"divine intervention\" that devotees believed kept the atmosphere pristine and the weather cool, allowing followers from across the state time to travel for a final darshan. Even after three days, witnesses noted his body showed no signs of decomposition and radiated a distinct, healthy glow.",
+      "conclusionP2": "The life of the \"River Swami\" leaves us with a haunting question: If a man can remain immobile for 18 years, unbothered by the consumption of his own flesh by insects or the lashing of the elements, what does that tell us about the hidden \"transmitter\" within ourselves? Poondi Mahan remains a testament to the \"Perfect Saint\"—a being who required nothing from the world because he was the source of the current itself. He reminds us that beneath the frantic noise of the human experience, there is a state of stillness that is the source of all light."
+    }
+  },
+  "trusteesPage": {
+    "heroTitle": "Our Trustees",
+    "heroSubtitle": "Dedicated individuals serving the Sri Poondi Mahan Attru Swamy Ashramam Committee.",
+    "overline": "Leadership",
+    "heading": "The Custodians of His Legacy",
+    "subheading": "The trustees of Sri Poondi Mahan Attru Swamy Ashramam Committee serve with devotion, ensuring the continuation of Annadanam Seva and the preservation of his spiritual legacy.",
+    "committeeBoxHeading": "Sri Poondi Mahan Attru Swamy Ashramam Committee",
+    "getInTouch": "Get in Touch"
+  },
+  "galleryPage": {
+    "heroTitle": "Sacred Photo & Video Gallery",
+    "heroSubtitle": "Photographs and sacred videos from the ashramam, devotional gatherings, Annadanam Seva and the life of Sri Poondi Mahan.",
+    "overline": "Glimpses of Grace",
+    "heading": "Sacred Gallery",
+    "tabPhotos": "Photos",
+    "tabVideos": "Videos",
+    "filterAll": "All Photos",
+    "filterSwami": "Sri Poondi Mahan",
+    "filterAshram": "Ashramam & Sanctum",
+    "filterDarshan": "Devotee Darshan",
+    "filterEvents": "Festivals & Puja",
+    "videoFilterAll": "All Videos",
+    "videoFilterFull": "Full Videos",
+    "videoFilterShorts": "Shorts",
+    "sectionFullVideos": "Full Videos",
+    "sectionShorts": "Sacred Shorts",
+    "fullVideosSubtitle": "Devotional speeches, ashramam history, and sanctum darshan.",
+    "shortsSubtitle": "Short divine glimpses and blessings of Sri Poondi Mahan.",
+    "watchVideo": "Watch Video",
+    "shortsBadge": "Shorts",
+    "fullVideoBadge": "Full Video",
+    "noVideos": "No videos found in this category."
+  },
+  "downloadsPage": {
+    "heroTitle": "Books & Publications",
+    "heroSubtitle": "Read and download available publications about Sri Poondi Mahan and his spiritual legacy.",
+    "overline": "Sacred Literature",
+    "heading": "Books & Publications",
+    "subheading": "The life, teachings, and spiritual legacy of Sri Poondi Mahan preserved in text, available for all devotees to read online and download freely.",
+    "prepHeading": "More Publications in Preparation",
+    "prepDesc": "The Sri Poondi Mahan Attru Swamy Ashramam Committee is dedicated to digitizing and publishing historical records, songs, and devotional literature to benefit future generations.",
+    "supportBtn": "Support Ashramam Activities"
+  },
+  "donationPage": {
+    "heroTitle": "Annadanam & Seva Offerings",
+    "heroSubtitle": "Support the sacred daily Annadanam and charitable activities of Sri Poondi Mahan Attru Swamy Ashramam Committee.",
+    "overline": "Sacred Annadanam",
+    "heading": "Your Gift, His Grace",
+    "p1": "Sri Poondi Mahan taught that feeding a hungry soul is the highest act of worship. Through your generous offering, you directly participate in the unbroken tradition of Annadanam Seva — serving wholesome, free food daily to all devotees and seekers visiting the Ashramam.",
+    "p2": "Every rupee contributed goes directly to purchasing grains, provisions, maintaining the Ashramam sanctuary, and sustaining daily temple rituals.",
+    "stat1": "Days Annadanam",
+    "stat2": "Souls Served per year",
+    "trustTitle": "Official & Verified Account",
+    "trustSubtitle": "Official account of Sri Poondi Mahan Attru Swamy Ashramam Committee",
+    "trustTag1": "Zero Intermediary Fees",
+    "trustTag2": "Direct Bank Deposit",
+    "trustTag3": "Instant UPI Settlement",
+    "trustTag4": "100% Seva Utilization",
+    "advisoryTitle": "Devotee Advisory:",
+    "advisoryText": "Please make donations solely via the official QR Code, UPI ID, or UCO Bank details shown on this official page. The Ashramam committee never requests passwords, OTPs, or debit/credit card PINs.",
+    "scanHeading": "Scan & Donate via UPI",
+    "scanSub": "Scan this QR code with any UPI app on your phone (Google Pay, PhonePe, Paytm, BHIM, etc.)",
+    "verifiedQr": "Verified Merchant QR",
+    "payAnyUpi": "Pay with any UPI App",
+    "tapMobileNote": "(Tap above on mobile to automatically open Google Pay, PhonePe, Paytm, BHIM, or any UPI app)",
+    "desktopNotice": "✨ Official UPI ID copied! Please scan the QR code using your mobile payment app.",
+    "officialUpiId": "Official UPI ID",
+    "tapPreferred": "Tap to open your preferred app:",
+    "bankHeading": "Direct NEFT / RTGS / IMPS Details",
+    "bankSub": "For internet banking transfers or direct branch deposits, use the official UCO Bank details below:",
+    "bankLabel": "Bank Name",
+    "accountNameLabel": "Account Name",
+    "accountNumberLabel": "Account Number",
+    "ifscLabel": "IFSC Code",
+    "branchLabel": "Branch",
+    "afterTransferNote": "After completing the transfer, please retain your transaction reference or receipt. For acknowledgement or queries, you may reach out to the committee via the Contact page.",
+    "quote": "\"When you feed one hungry soul, a thousand blessings return to you.\" — Sri Poondi Mahan",
+    "causesOverline": "Sacred Seva Causes",
+    "causesHeading": "Where Your Divine Offerings Flow",
+    "causesSubtitle": "Every contribution directly empowers daily hunger relief, Vedic poojas, sacred tapas sanctum upkeep, and pilgrim sanctuary under the grace of Sri Poondi Mahan.",
+    "donateToSeva": "Offer Seva Now",
+    "causes": {
+      "annadanam": {
+        "tag": "Daily 365 Days Seva",
+        "title": "Nithya Annadanam Seva (Daily Sacred Food)",
+        "highlight": "3 Times Daily • 1,10,000+ Annually",
+        "desc": "Serving pure, wholesome, and sanctified satvik meals every single day to all visiting pilgrims, sadhus, and seekers with boundless love and devotion."
+      },
+      "festival": {
+        "tag": "Special Occasions & Festivals",
+        "title": "Guru Pooja & Festival Mahadhanam",
+        "highlight": "Aradhana • Pournami • Karthigai Deepam",
+        "desc": "Grand feast distributions organized during Sri Poondi Mahan's Guru Pooja, Jayanthi, monthly Pournami, and auspicious festival days, feeding tens of thousands."
+      },
+      "pooja": {
+        "tag": "Samadhi Sanctum Rituals",
+        "title": "Nithya Pooja, Abhishekam & Nanda Deepam",
+        "highlight": "Pure Cow Ghee • Floral Alankaram",
+        "desc": "Supporting the eternal flame (Nanda Deepam), sacred morning & evening abhishekam, fragrant flower garlands, and continuous Vedic prayers at the Holy Samadhi."
+      },
+      "sanctum": {
+        "tag": "Sacred Sthalam Preservation",
+        "title": "Holy Cheyyar River Tapas Sanctum Upkeep",
+        "highlight": "Historic Tapas Ground • Clean Ghats",
+        "desc": "Preserving and protecting the sacred riverbank spot where Attru Swamy sat in deep tapas for decades, maintaining a tranquil sanctuary for meditation."
+      },
+      "dhyana": {
+        "tag": "Devotee & Sadhu Welfare",
+        "title": "Dhyana Mandapam & Pilgrim Sanctuary",
+        "highlight": "Meditation Hall • Shelter & Pure Water",
+        "desc": "Providing peaceful dhyana facilities, clean drinking water, rest shelters for visiting sadhus, and essential amenities for pilgrims arriving from across the world."
+      }
+    },
+    "sponsorshipHeading": "Suggested Seva Sponsorship Offerings",
+    "sponsorshipSub": "Devotees may dedicate sacred seva offerings on personal auspicious milestones such as birthdays, anniversaries, or in memory of ancestors:",
+    "sponsorshipOptions": [
+      {
+        "title": "One Session Mahaprasadam",
+        "desc": "Sponsor the noon Annadanam feast served with love to all visiting pilgrims."
+      },
+      {
+        "title": "Monthly Nanda Deepam & Ghee Seva",
+        "desc": "Provide pure cow ghee to keep the eternal sacred flame burning at the Mahan's Holy Samadhi."
+      },
+      {
+        "title": "Special Abhishekam & Floral Seva",
+        "desc": "Dedicate fresh flower garlands, sandal paste, and sacred offerings for the daily Samadhi Pooja."
+      }
+    ]
+  },
+  "contactPage": {
+    "heroTitle": "Contact & Visit",
+    "heroSubtitle": "Find us at Sri Poondi Mahan Attru Swamy Ashramam. All are welcome.",
+    "visitOverline": "Visit Us",
+    "visitHeading": "The Ashramam",
+    "liveLocation": "Live Location • Poondi, Tamil Nadu",
+    "getDirections": "Get Directions",
+    "openInMaps": "Open in Maps",
+    "reachOutOverline": "Reach Out",
+    "reachOutHeading": "Contact the Trustees",
+    "poojaScheduleOverline": "Sacred Timings",
+    "poojaScheduleTitle": "Pooja Schedule Time",
+    "darshanOpen": "Daily Darshan & Annadanam Open to All",
+    "timingsSubject": "* Standard Daily Ashramam Schedule",
+    "donationEnquiryNote": "For donations and bank transfer enquiries, please visit the Donation page for full bank details."
+  },
+  "notFound": {
+    "title": "404",
+    "subtitle": "Page Not Found",
+    "desc": "The page you are looking for could not be found. It may have been moved or does not exist.",
+    "returnHome": "Return Home"
+  }
+}

@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Marcellus&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Noto+Serif+Tamil:wght@400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-forest: #173F35;
+  --color-forest-dark: #0E2D27;
+  --color-forest-deeper: #091e1a;
+  --color-sandalwood: #E8D7B5;
+  --color-gold: #B78A3B;
+  --color-gold-light: #D8B86A;
+  --color-gold-pale: #e8c97a;
+  --color-ivory: #FAF7F0;
+  --color-sand: #F2EBDD;
+  --color-charcoal: #252522;
+  --color-muted: #77736A;
+  --color-white: #FFFFFF;
+
+  --font-serif: 'Cinzel', 'Marcellus', Georgia, serif;
+  --font-marcellus: 'Marcellus', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-tamil: 'Noto Serif Tamil', 'Noto Sans Tamil', serif;
+}
+
+
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-ivory);
+  color: var(--color-charcoal);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
+/* Swiper overrides */
+.swiper-pagination-bullet {
+  background: rgba(255,255,255,0.5) !important;
+  width: 8px !important;
+  height: 8px !important;
+  opacity: 1 !important;
+}
+.swiper-pagination-bullet-active {
+  background: var(--color-gold) !important;
+  width: 24px !important;
+  border-radius: 4px !important;
+}
+.swiper-button-next,
+.swiper-button-prev {
+  color: var(--color-gold) !important;
+}
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 1.25rem !important;
+}
+
+/* Tamil and special font classes */
+.font-tamil {
+  font-family: var(--font-tamil);
+}
+.font-cinzel {
+  font-family: var(--font-serif);
+}
+.font-marcellus {
+  font-family: var(--font-marcellus);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-sand); }
+::-webkit-scrollbar-thumb { background: var(--color-forest); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-gold); }
+
+/* Selection */
+::selection {
+  background: var(--color-gold);
+  color: var(--color-ivory);
+}
+
+/* Focus visible */
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* YARL (lightbox) overrides */
+.yarl__root {
+  --yarl__color_backdrop: rgba(9, 30, 26, 0.97);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s ease-out forwards;
+}
+

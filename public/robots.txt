@@ -1,0 +1,37 @@
+# Robots.txt for Sri Poondi Mahan Attru Swamy Ashramam Committee
+# Website: https://poondimahan.org
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /admin/*
+Disallow: /api/
+Disallow: /api/*
+
+User-agent: Googlebot
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /admin/*
+Disallow: /api/
+Disallow: /api/*
+
+User-agent: Googlebot-Image
+Allow: /
+Allow: /images/
+Allow: /images/*
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /admin/*
+Disallow: /api/
+Disallow: /api/*
+
+# Sitemap Index
+Sitemap: https://poondimahan.org/sitemap.xml
+Host: https://poondimahan.org
+
+

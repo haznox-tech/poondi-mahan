@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- Home Page -->
+  <url>
+    <loc>https://poondimahan.org/</loc>
+    <lastmod>2026-08-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://poondimahan.org/images/poondimahan-logo.png</image:loc>
+      <image:title>Sri Poondi Mahan Attru Swamy Ashramam Logo</image:title>
+      <image:caption>Official Emblem of Sri Poondi Mahan Attru Swamy Ashramam</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://poondimahan.org/images/hero/sri-poondi-mahan-spiritual-legacy-hero.webp</image:loc>
+      <image:title>Sri Poondi Mahan - Attru Swamy Ashramam</image:title>
+      <image:caption>Sri Poondi Mahan divine presence and spiritual legacy</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://poondimahan.org/images/swami/poondi-mahan-portrait.webp</image:loc>
+      <image:title>Sri Poondi Mahan Portrait</image:title>
+      <image:caption>Revered spiritual master Sri Poondi Mahan</image:caption>
+    </image:image>
+  </url>
+
+  <!-- About Page -->
+  <url>
+    <loc>https://poondimahan.org/about</loc>
+    <lastmod>2026-08-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://poondimahan.org/images/swami/poondi-mahan-portrait.webp</image:loc>
+      <image:title>Sri Poondi Mahan Life and Tapas</image:title>
+      <image:caption>Sri Poondi Mahan spiritual journey and ashramam legacy</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Annadanam & Donations Page -->
+  <url>
+    <loc>https://poondimahan.org/donation</loc>
+    <lastmod>2026-08-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://poondimahan.org/images/hero/hero-2.webp</image:loc>
+      <image:title>Annadanam Seva</image:title>
+      <image:caption>Free food offering and seva at Sri Poondi Mahan Ashramam</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Gallery Page -->
+  <url>
+    <loc>https://poondimahan.org/gallery</loc>
+    <lastmod>2026-09-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://poondimahan.org/images/gallery/sri-poondi-mahan-tapas-posture.webp</image:loc>
+      <image:title>Sri Poondi Mahan Tapas Svarupam</image:title>
+      <image:caption>Sri Poondi Mahan Swami - Divine Tapas Form in Poondi</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://poondimahan.org/images/gallery/sri-poondi-mahan-sitting-dhyana-darshan.webp</image:loc>
+      <image:title>Sri Poondi Mahan Divine Tapas</image:title>
+      <image:caption>Sri Poondi Mahan - Sacred Sitting Tapas Posture</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://poondimahan.org/images/gallery/poondi-mahan-sanctum-vigraham-puja.webp</image:loc>
+      <image:title>Sanctum Vigraham &amp; Puja Altar</image:title>
+      <image:caption>Sacred Deity and Vigraham inside Sri Poondi Mahan Ashramam</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Trustees Page -->
+  <url>
+    <loc>https://poondimahan.org/trustees</loc>
+    <lastmod>2026-08-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://poondimahan.org/images/trustees/sidhu-ilampandi-chairman-photo.png</image:loc>
+      <image:title>Sadhu Ilampandian - Chairman</image:title>
+      <image:caption>Sadhu Ilampandian, Chairman of Sri Poondi Mahan Attru Swamy Ashramam Committee</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://poondimahan.org/images/trustees/k-bhavani-secretary-photo.png</image:loc>
+      <image:title>K. Bhavani - Secretary</image:title>
+      <image:caption>K. Bhavani, Secretary of Sri Poondi Mahan Attru Swamy Ashramam Committee</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://poondimahan.org/images/trustees/d-ravi-mohan-treasurer-photo.png</image:loc>
+      <image:title>D. Ravi Mohan - Treasurer</image:title>
+      <image:caption>D. Ravi Mohan, Treasurer of Sri Poondi Mahan Attru Swamy Ashramam Committee</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Books & Downloads Page -->
+  <url>
+    <loc>https://poondimahan.org/downloads</loc>
+    <lastmod>2026-08-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://poondimahan.org/images/books-cover/book_cover.webp</image:loc>
+      <image:title>Sri Poondi Mahan - Poondi Swamy Spiritual Book Cover</image:title>
+      <image:caption>Cover of Sri Poondi Mahan Tamil Biography and Spiritual Teachings</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Contact & Visit Page -->
+  <url>
+    <loc>https://poondimahan.org/contact</loc>
+    <lastmod>2026-08-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+</urlset>
