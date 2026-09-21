@@ -1,13 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import {
-  initCredentials,
-  verifyPassword,
-  isLockedOut,
-  getLockoutUntil,
-  getFailedAttempts,
-  recordFailedAttempt,
-  resetLockout,
-  getAdminEmail,
+  getAdminEmailHint,
   requestPasswordResetOtp,
   verifyPasswordResetOtp,
   isResetAuthorized,
@@ -19,11 +12,11 @@ import {
 const AdminAuthContext = createContext(null);
 
 export function AdminAuthProvider({ children }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return sessionStorage.getItem('pm_admin_auth') === 'true';
-  });
-  const [lockoutUntil, setLockoutUntil] = useState(() => getLockoutUntil());
-  const [failedAttempts, setFailedAttempts] = useState(() => getFailedAttempts());
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [lockoutUntil, setLockoutUntil] = useState(null);
+  const [failedAttempts, setFailedAttempts] = useState(0);
+  const [adminEmail, setAdminEmail] = useState('');
 
   // Forgot Password OTP Flow state
   // resetFlow: null | 'otp_request' | 'otp_verify' | 'new_password'
@@ -35,13 +28,27 @@ export function AdminAuthProvider({ children }) {
   const [resetDone, setResetDone] = useState(false);
 
   useEffect(() => {
-    initCredentials();
-    // Check if there was an active session
+    (async () => {
+      try {
+        const res = await fetch('/api/auth/session', { credentials: 'include' });
+        const data = await res.json().catch(() => ({}));
+        setIsAuthenticated(Boolean(data.authenticated));
+        if (data.email) setAdminEmail(data.email);
+        if (data.lockoutUntil) setLockoutUntil(data.lockoutUntil);
+        if (typeof data.attemptsRemaining === 'number') {
+          setFailedAttempts(Math.max(0, 3 - data.attemptsRemaining));
+        }
+      } catch {
+        setIsAuthenticated(false);
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+
+    // Check if there was an active OTP reset session
     const active = getActiveOtpSession();
     if (active) {
       if (active.email) setResetEmail(active.email);
-      if (active.code) setResetOtpPreview(active.code);
-      if (active.expiresAt) setOtpExpiresAt(active.expiresAt);
       if (active.token) {
         setResetToken(active.token);
         setResetFlow('new_password');
@@ -57,52 +64,72 @@ export function AdminAuthProvider({ children }) {
       if (Date.now() >= lockoutUntil) {
         setLockoutUntil(null);
         setFailedAttempts(0);
-        resetLockout();
         clearInterval(interval);
       }
     }, 1000);
     return () => clearInterval(interval);
   }, [lockoutUntil]);
 
-  const login = useCallback((email, password) => {
-    if (isLockedOut()) {
-      setLockoutUntil(getLockoutUntil());
-      return { success: false, locked: true };
-    }
+  const login = useCallback(async (email, password) => {
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json().catch(() => ({}));
 
-    const adminEmail = getAdminEmail();
-    if (email.trim().toLowerCase() !== adminEmail.toLowerCase()) {
-      recordFailedAttempt();
-      const attempts = getFailedAttempts();
-      setFailedAttempts(attempts);
-      if (isLockedOut()) setLockoutUntil(getLockoutUntil());
-      return { success: false, locked: false, wrongCredentials: true };
-    }
+      if (!data.ok) {
+        if (data.lockoutUntil) setLockoutUntil(data.lockoutUntil);
+        if (typeof data.attemptsRemaining === 'number') {
+          setFailedAttempts(Math.max(0, 3 - data.attemptsRemaining));
+        }
+        return { success: false, locked: Boolean(data.locked), wrongCredentials: !data.locked };
+      }
 
-    if (!verifyPassword(password)) {
-      recordFailedAttempt();
-      const attempts = getFailedAttempts();
-      setFailedAttempts(attempts);
-      if (isLockedOut()) setLockoutUntil(getLockoutUntil());
-      return { success: false, locked: isLockedOut(), wrongCredentials: true };
+      setFailedAttempts(0);
+      setLockoutUntil(null);
+      setIsAuthenticated(true);
+      if (data.email) setAdminEmail(data.email);
+      return { success: true };
+    } catch {
+      return { success: false, error: 'Network error connecting to the server.' };
     }
-
-    resetLockout();
-    setFailedAttempts(0);
-    setLockoutUntil(null);
-    sessionStorage.setItem('pm_admin_auth', 'true');
-    setIsAuthenticated(true);
-    return { success: true };
   }, []);
 
-  const logout = useCallback(() => {
-    sessionStorage.removeItem('pm_admin_auth');
+  const logout = useCallback(async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+    } catch {
+      // ignore network errors on logout — still clear local state
+    }
     setIsAuthenticated(false);
+  }, []);
+
+  // Change email/password for the current authenticated session.
+  const changePassword = useCallback(async (currentPassword, newEmail, newPassword) => {
+    try {
+      const res = await fetch('/api/auth/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ currentPassword, newEmail, newPassword }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) {
+        return { success: false, error: data.error || 'Failed to update credentials.' };
+      }
+      if (data.email) setAdminEmail(data.email);
+      return { success: true, email: data.email };
+    } catch {
+      return { success: false, error: 'Network error connecting to the server.' };
+    }
   }, []);
 
   // OTP Password Reset Flow Actions
   const startForgotPasswordFlow = useCallback((initialEmail) => {
-    const defaultEmail = initialEmail || getAdminEmail();
+    const defaultEmail = initialEmail || getAdminEmailHint();
     setResetEmail(defaultEmail);
     setResetToken(null);
     setResetOtpPreview('');
@@ -110,25 +137,24 @@ export function AdminAuthProvider({ children }) {
     setResetFlow('otp_request');
   }, []);
 
-  const sendOtp = useCallback((targetEmail) => {
-    const res = requestPasswordResetOtp(targetEmail);
+  const sendOtp = useCallback(async (targetEmail) => {
+    const res = await requestPasswordResetOtp(targetEmail);
     if (res.success) {
       setResetEmail(res.email);
-      setResetOtpPreview(res.code || '');
-      setOtpExpiresAt(res.expiresAt || null);
+      setOtpExpiresAt(Date.now() + 10 * 60 * 1000);
       setResetFlow('otp_verify');
     }
     return res;
   }, []);
 
-  const confirmOtp = useCallback((inputCode) => {
-    const res = verifyPasswordResetOtp(inputCode);
+  const confirmOtp = useCallback(async (inputCode) => {
+    const res = await verifyPasswordResetOtp(inputCode, resetEmail);
     if (res.success) {
-      setResetToken(res.token);
+      setResetToken(res.verificationToken);
       setResetFlow('new_password');
     }
     return res;
-  }, []);
+  }, [resetEmail]);
 
   const saveNewPassword = useCallback(async (newPassword, optionalNewEmail) => {
     const activeToken = resetToken || getActiveOtpSession()?.token;
@@ -136,10 +162,9 @@ export function AdminAuthProvider({ children }) {
       return { success: false, error: 'Access denied: Please verify with OTP code first.' };
     }
 
-    const targetEmail = optionalNewEmail || resetEmail || getAdminEmail();
+    const targetEmail = optionalNewEmail || resetEmail;
     const res = await completePasswordReset(activeToken, newPassword, targetEmail);
     if (res.success) {
-      resetLockout();
       setFailedAttempts(0);
       setLockoutUntil(null);
       setResetDone(true);
@@ -161,8 +186,11 @@ export function AdminAuthProvider({ children }) {
     <AdminAuthContext.Provider
       value={{
         isAuthenticated,
+        isLoading,
         login,
         logout,
+        changePassword,
+        adminEmail,
         lockoutUntil,
         failedAttempts,
         // OTP Forgot Password exports

@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { useAdminAuth } from '../../admin/AdminAuthContext.jsx';
-import { getAdminEmail, isResetAuthorized } from '../../admin/adminStore.js';
+import { getAdminEmailHint, isResetAuthorized } from '../../admin/adminStore.js';
 import EmailOtpVerification from '../../components/EmailOtpVerification.jsx';
 
 function formatCountdown(ms) {
@@ -99,8 +99,7 @@ export default function AdminLogin() {
     if (loading) return;
     setError('');
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 600));
-    const result = login(email, password);
+    const result = await login(email, password);
     setLoading(false);
     if (result.success) {
       navigate('/admin/gallery', { replace: true });
@@ -119,7 +118,7 @@ export default function AdminLogin() {
   // Start Forgot Password Flow
   const handleStartForgotPassword = () => {
     setError('');
-    startForgotPasswordFlow(email.trim() || getAdminEmail());
+    startForgotPasswordFlow(email.trim() || getAdminEmailHint());
   };
 
   // Step 3: Save New Password
@@ -127,8 +126,8 @@ export default function AdminLogin() {
     e.preventDefault();
     setPwError('');
 
-    if (newPassword.length < 6) {
-      setPwError('Password must be at least 6 characters long.');
+    if (newPassword.length < 8) {
+      setPwError('Password must be at least 8 characters long.');
       return;
     }
     if (newPassword !== confirmPassword) {
@@ -163,17 +162,7 @@ export default function AdminLogin() {
 
         <div className="relative z-10 w-full flex justify-center">
           <EmailOtpVerification
-            initialEmail={resetEmail || email || getAdminEmail()}
-            requireMatchingEmail={(enteredEmail) => {
-              const currentAdmin = getAdminEmail().toLowerCase();
-              if (enteredEmail.toLowerCase() !== currentAdmin) {
-                return {
-                  valid: false,
-                  error: 'The entered email does not match the registered admin account.',
-                };
-              }
-              return { valid: true };
-            }}
+            initialEmail={resetEmail || email || getAdminEmailHint()}
             onVerified={({ email: verifiedEmail, verificationToken }) => {
               if (verifiedEmail && typeof setResetEmail === 'function') setResetEmail(verifiedEmail);
               if (verificationToken && typeof setResetToken === 'function') setResetToken(verificationToken);
@@ -280,7 +269,7 @@ export default function AdminLogin() {
                       type={showNewPw ? 'text' : 'password'}
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      placeholder="At least 6 characters"
+                      placeholder="At least 8 characters"
                       className="w-full bg-[#0a1210] border border-[#1e3530] focus:border-[#B78A3B] text-[#FAF7F0] placeholder-[#3a4a47] rounded-xl pl-10 pr-10 py-2.5 sm:py-3 text-xs sm:text-sm outline-none transition-colors"
                       required
                       autoFocus

@@ -11,8 +11,6 @@ import { fetchLatestGalleryDataFromGitHub } from './githubSync.js';
 // Storage Keys
 // ---------------------------------------------------------------------------
 export const KEYS = {
-  CREDENTIALS: 'pm_admin_credentials',
-  LOCKOUT: 'pm_admin_lockout',
   GALLERY: 'pm_admin_all_gallery',
   LEGACY_GALLERY: 'pm_admin_gallery',
   FEATURED: 'pm_admin_featured_ids',
@@ -149,10 +147,10 @@ async function doSave() {
       trash: getRecentlyDeletedItems(),
       videos: getAllVideos(),
       videoTrash: getRecentlyDeletedVideos(),
-      credentials: getCredentials(),
     };
     const res = await fetch('/api/admin/data', {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -418,13 +416,6 @@ export function applyServerData(data) {
     hasChanges = true;
   }
 
-  // 6. Sync Admin Credentials
-  if (data.credentials && data.credentials.email) {
-    localStorage.setItem(KEYS.CREDENTIALS, JSON.stringify(data.credentials));
-    window.dispatchEvent(new Event('pm_admin_auth_updated'));
-    hasChanges = true;
-  }
-
   if (hasChanges) {
     window.dispatchEvent(new Event('storage'));
   }
@@ -647,7 +638,7 @@ export async function uploadGalleryFile(file) {
   try {
     const form = new FormData();
     form.append('file', file);
-    const res = await fetch('/api/gallery/upload', { method: 'POST', body: form });
+    const res = await fetch('/api/gallery/upload', { method: 'POST', credentials: 'include', body: form });
     if (res.ok) {
       const data = await res.json();
       return {
@@ -696,6 +687,7 @@ export async function deleteGalleryFile(filePath) {
   try {
     await fetch('/api/gallery/delete', {
       method: 'POST',
+      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ filePath }),
     });
@@ -713,12 +705,13 @@ export async function renameGalleryFile(oldPath, newName) {
   try {
     const res = await fetch('/api/gallery/rename', {
       method: 'POST',
+      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ oldPath, newName }),
     });
     if (res.ok) {
       const data = await res.json();
-      return data.newPath || oldPath;
+      return data.path || data.newPath || oldPath;
     }
   } catch {
     // ignore
@@ -726,89 +719,14 @@ export async function renameGalleryFile(oldPath, newName) {
   return oldPath;
 }
 
-const DEFAULT_EMAIL = 'divagar.m.msc.cs@gmail.com';
-const DEFAULT_PASSWORD = 'ponditest';
-
-function hashPassword(password) {
-  let hash = 0;
-  for (let i = 0; i < password.length; i++) {
-    const char = password.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash |= 0;
-  }
-  return hash.toString(16);
-}
-
-export function initCredentials() {
-  if (!localStorage.getItem(KEYS.CREDENTIALS)) {
-    const defaultCreds = (codebaseData && codebaseData.credentials)
-      ? codebaseData.credentials
-      : {
-          email: DEFAULT_EMAIL,
-          passwordHash: hashPassword(DEFAULT_PASSWORD),
-        };
-    localStorage.setItem(KEYS.CREDENTIALS, JSON.stringify(defaultCreds));
-  }
-}
-
-export function getCredentials() {
-  const raw = localStorage.getItem(KEYS.CREDENTIALS);
-  if (!raw) {
-    initCredentials();
-    return JSON.parse(localStorage.getItem(KEYS.CREDENTIALS));
-  }
-  return JSON.parse(raw);
-}
-
-export function verifyPassword(inputPassword) {
-  const creds = getCredentials();
-  return creds.passwordHash === hashPassword(inputPassword);
-}
-
-export function updatePassword(newPassword) {
-  const creds = getCredentials();
-  creds.passwordHash = hashPassword(newPassword);
-  localStorage.setItem(KEYS.CREDENTIALS, JSON.stringify(creds));
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new Event('pm_admin_auth_updated'));
-    window.dispatchEvent(new Event('storage'));
-  }
-  saveToCodebase();
-}
-
-export function updateAdminEmail(newEmail) {
-  const creds = getCredentials();
-  if (newEmail && newEmail.trim()) {
-    creds.email = newEmail.trim().toLowerCase();
-    localStorage.setItem(KEYS.CREDENTIALS, JSON.stringify(creds));
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new Event('pm_admin_auth_updated'));
-      window.dispatchEvent(new Event('storage'));
-    }
-    saveToCodebase();
-  }
-  return creds.email;
-}
-
-export function updateAdminCredentials(newEmail, newPassword) {
-  const creds = getCredentials();
-  if (newEmail && newEmail.trim()) {
-    creds.email = newEmail.trim().toLowerCase();
-  }
-  if (newPassword && newPassword.trim()) {
-    creds.passwordHash = hashPassword(newPassword.trim());
-  }
-  localStorage.setItem(KEYS.CREDENTIALS, JSON.stringify(creds));
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new Event('pm_admin_auth_updated'));
-    window.dispatchEvent(new Event('storage'));
-  }
-  saveToCodebase();
-  return creds;
-}
-
-export function getAdminEmail() {
-  return getCredentials().email;
+/**
+ * Cosmetic-only display hint for the login form (e.g. prefilling the email
+ * field). This is NOT a security boundary — actual authentication is fully
+ * verified server-side against server/data/admin-credentials.json.
+ */
+export function getAdminEmailHint() {
+  if (typeof window === 'undefined') return '';
+  return (import.meta.env?.VITE_ADMIN_EMAIL || '').trim();
 }
 
 // ---------------------------------------------------------------------------
@@ -888,7 +806,7 @@ export async function verifyEmailOtp(email, otp) {
  * Reset password via server API using the single-use verificationToken.
  */
 export async function resetPasswordWithToken(email, verificationToken, newPassword) {
-  const targetEmail = (email || getAdminEmail()).trim().toLowerCase();
+  const targetEmail = (email || '').trim().toLowerCase();
   try {
     const res = await fetch('/api/auth/reset-password', {
       method: 'POST',
@@ -906,11 +824,6 @@ export async function resetPasswordWithToken(email, verificationToken, newPasswo
     if (typeof window !== 'undefined') {
       sessionStorage.removeItem(OTP_TOKEN_KEY);
     }
-    // Update local client storage credentials as well and clear lockout
-    if (newPassword) {
-      updateAdminCredentials(targetEmail, newPassword);
-    }
-    resetLockout();
     return { success: true, message: data.message || 'Password updated successfully!' };
   } catch {
     return { success: false, error: 'Network error resetting password.' };
@@ -923,7 +836,7 @@ export function requestPasswordResetOtp(email) {
 }
 
 export function verifyPasswordResetOtp(inputCode, email) {
-  return verifyEmailOtp(email || getAdminEmail(), inputCode);
+  return verifyEmailOtp(email, inputCode);
 }
 
 export function isResetAuthorized(token) {
@@ -946,7 +859,7 @@ export function isResetAuthorized(token) {
 
 export function completePasswordReset(token, newPassword, newEmail) {
   const raw = typeof window !== 'undefined' ? sessionStorage.getItem(OTP_TOKEN_KEY) : null;
-  let storedEmail = getAdminEmail();
+  let storedEmail = '';
   let verifiedToken = token;
   if (raw) {
     try {
@@ -981,54 +894,9 @@ export function getActiveOtpSession() {
 }
 
 // ---------------------------------------------------------------------------
-// Lockout
-// ---------------------------------------------------------------------------
-const MAX_ATTEMPTS = 3;
-const LOCKOUT_DURATION_MS = 3 * 60 * 60 * 1000;
-
-function getLockout() {
-  const raw = localStorage.getItem(KEYS.LOCKOUT);
-  return raw ? JSON.parse(raw) : { attempts: 0, lockedUntil: null };
-}
-
-function saveLockout(data) {
-  localStorage.setItem(KEYS.LOCKOUT, JSON.stringify(data));
-}
-
-export function isLockedOut() {
-  const lockout = getLockout();
-  if (!lockout.lockedUntil) return false;
-  if (Date.now() < lockout.lockedUntil) return true;
-  saveLockout({ attempts: 0, lockedUntil: null });
-  return false;
-}
-
-export function getLockoutUntil() {
-  const lockout = getLockout();
-  if (lockout.lockedUntil && Date.now() < lockout.lockedUntil) {
-    return lockout.lockedUntil;
-  }
-  return null;
-}
-
-export function getFailedAttempts() {
-  return getLockout().attempts;
-}
-
-export function recordFailedAttempt() {
-  const lockout = getLockout();
-  const newAttempts = lockout.attempts + 1;
-  if (newAttempts >= MAX_ATTEMPTS) {
-    saveLockout({ attempts: newAttempts, lockedUntil: Date.now() + LOCKOUT_DURATION_MS });
-  } else {
-    saveLockout({ attempts: newAttempts, lockedUntil: null });
-  }
-}
-
-export function resetLockout() {
-  saveLockout({ attempts: 0, lockedUntil: null });
-}
-
+// NOTE: Login lockout is now enforced entirely server-side (server/authRoutes.js,
+// keyed by client IP). Client-side lockout tracking was removed since it was
+// trivially bypassable (e.g. clearing localStorage) and gave no real protection.
 // ---------------------------------------------------------------------------
 // Unified Gallery Store (All 35 static photos + new photos are editable & deletable)
 // ---------------------------------------------------------------------------

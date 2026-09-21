@@ -202,9 +202,6 @@ export default function AdminGallery() {
   const [showCloudinaryModal, setShowCloudinaryModal] = useState(false);
   const [cldCloudName, setCldCloudName] = useState(() => getCloudinaryConfig().cloudName);
   const [cldUploadPreset, setCldUploadPreset] = useState(() => getCloudinaryConfig().uploadPreset);
-  const [cldApiKey, setCldApiKey] = useState(() => getCloudinaryConfig().apiKey);
-  const [cldApiSecret, setCldApiSecret] = useState(() => getCloudinaryConfig().apiSecret);
-  const [cldShowSecret, setCldShowSecret] = useState(false);
   const [cldTesting, setCldTesting] = useState(false);
   const [cldError, setCldError] = useState('');
   const [cldSuccess, setCldSuccess] = useState('');
@@ -213,8 +210,6 @@ export default function AdminGallery() {
     e?.preventDefault?.();
     const cn = cldCloudName.trim();
     const up = cldUploadPreset.trim();
-    const key = cldApiKey.trim();
-    const secret = cldApiSecret.trim();
 
     if (!cn) {
       setCldError('Please enter your Cloudinary Cloud Name.');
@@ -231,7 +226,7 @@ export default function AdminGallery() {
 
     try {
       await testCloudinaryConnection(cn, up);
-      setCloudinaryConfig({ cloudName: cn, uploadPreset: up, apiKey: key, apiSecret: secret });
+      setCloudinaryConfig({ cloudName: cn, uploadPreset: up });
       setCloudinaryConnected(true);
       setCldSuccess('Connected to Cloudinary successfully! Test upload verified.');
       setTimeout(() => {
@@ -246,11 +241,9 @@ export default function AdminGallery() {
   };
 
   const handleDisconnectCloudinary = () => {
-    setCloudinaryConfig({ cloudName: '', uploadPreset: '', apiKey: '', apiSecret: '' });
+    setCloudinaryConfig({ cloudName: '', uploadPreset: '' });
     setCldCloudName('');
     setCldUploadPreset('');
-    setCldApiKey('');
-    setCldApiSecret('');
     setCloudinaryConnected(false);
     setCldSuccess('');
     setCldError('Cloudinary disconnected.');
@@ -1959,50 +1952,9 @@ export default function AdminGallery() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                <div>
-                  <label className="block text-xs font-semibold text-[#8ea4b8] uppercase tracking-wider mb-1.5">
-                    API Key <span className="text-[10px] text-[#6d8496] lowercase">(optional)</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={cldApiKey}
-                    onChange={(e) => {
-                      setCldApiKey(e.target.value);
-                      setCldError('');
-                      setCldSuccess('');
-                    }}
-                    placeholder="e.g. 123456789012345"
-                    className="w-full bg-[#091116] border border-[#1b2f3d] focus:border-sky-400 text-[#FAF7F0] rounded-xl px-4 py-2.5 text-xs font-mono outline-none transition-colors"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-[#8ea4b8] uppercase tracking-wider mb-1.5">
-                    API Secret <span className="text-[10px] text-[#6d8496] lowercase">(for deletions)</span>
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={cldShowSecret ? 'text' : 'password'}
-                      value={cldApiSecret}
-                      onChange={(e) => {
-                        setCldApiSecret(e.target.value);
-                        setCldError('');
-                        setCldSuccess('');
-                      }}
-                      placeholder="e.g. abcdEFGH1234..."
-                      className="w-full bg-[#091116] border border-[#1b2f3d] focus:border-sky-400 text-[#FAF7F0] rounded-xl px-4 py-2.5 text-xs font-mono pr-10 outline-none transition-colors"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setCldShowSecret(!cldShowSecret)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#77736A] hover:text-[#FAF7F0] cursor-pointer"
-                    >
-                      {cldShowSecret ? <EyeOff size={15} /> : <Eye size={15} />}
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <p className="text-[10px] text-[#6d8496] -mt-1">
+                Asset deletion is handled securely by the server and does not require an API key/secret here.
+              </p>
 
               {cldError && (
                 <div className="p-3 rounded-xl bg-red-950/40 border border-red-800/60 text-red-300 text-xs flex items-center gap-2">

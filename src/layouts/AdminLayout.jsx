@@ -22,12 +22,9 @@ import {
 } from 'lucide-react';
 import { useAdminAuth } from '../admin/AdminAuthContext.jsx';
 import {
-  getAdminEmail,
-  updateAdminCredentials,
   getRecentlyDeletedItems,
   getRecentlyDeletedVideos,
   syncFromCodebase,
-  flushToCodebase,
 } from '../admin/adminStore.js';
 import clsx from 'clsx';
 
@@ -39,10 +36,9 @@ const navItems = [
 ];
 
 export default function AdminLayout() {
-  const { logout } = useAdminAuth();
+  const { logout, adminEmail, changePassword } = useAdminAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [adminEmail, setAdminEmail] = useState(getAdminEmail());
   const [trashCount, setTrashCount] = useState(() =>
     typeof window !== 'undefined'
       ? (getRecentlyDeletedItems().length + getRecentlyDeletedVideos().length)
@@ -53,20 +49,20 @@ export default function AdminLayout() {
 
   // In-session Change Password Modal state
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [settingsCurrentPw, setSettingsCurrentPw] = useState('');
   const [settingsEmail, setSettingsEmail] = useState('');
   const [settingsPw, setSettingsPw] = useState('');
   const [settingsConfirmPw, setSettingsConfirmPw] = useState('');
+  const [showSettingsCurrentPw, setShowSettingsCurrentPw] = useState(false);
   const [showSettingsPw, setShowSettingsPw] = useState(false);
   const [showSettingsConfirmPw, setShowSettingsConfirmPw] = useState(false);
   const [settingsError, setSettingsError] = useState('');
   const [settingsSuccess, setSettingsSuccess] = useState(false);
+  const [isSavingSettings, setIsSavingSettings] = useState(false);
 
-  // Sync admin email and trash count when updated
+  // Sync trash count when updated
   useEffect(() => {
     let isMounted = true;
-    const handleAuthUpdated = () => {
-      if (isMounted) setAdminEmail(getAdminEmail());
-    };
     const handleTrashUpdated = () => {
       if (isMounted) {
         setTrashCount(getRecentlyDeletedItems().length + getRecentlyDeletedVideos().length);
@@ -74,21 +70,16 @@ export default function AdminLayout() {
     };
 
     syncFromCodebase().then(() => {
-      handleAuthUpdated();
       handleTrashUpdated();
     });
 
-    window.addEventListener('pm_admin_auth_updated', handleAuthUpdated);
     window.addEventListener('pm_trash_updated', handleTrashUpdated);
     window.addEventListener('pm_video_trash_updated', handleTrashUpdated);
-    window.addEventListener('storage', handleAuthUpdated);
     window.addEventListener('storage', handleTrashUpdated);
     return () => {
       isMounted = false;
-      window.removeEventListener('pm_admin_auth_updated', handleAuthUpdated);
       window.removeEventListener('pm_trash_updated', handleTrashUpdated);
       window.removeEventListener('pm_video_trash_updated', handleTrashUpdated);
-      window.removeEventListener('storage', handleAuthUpdated);
       window.removeEventListener('storage', handleTrashUpdated);
     };
   }, []);
@@ -112,7 +103,8 @@ export default function AdminLayout() {
   }, []);
 
   const handleOpenPasswordModal = () => {
-    setSettingsEmail(getAdminEmail());
+    setSettingsCurrentPw('');
+    setSettingsEmail(adminEmail || '');
     setSettingsPw('');
     setSettingsConfirmPw('');
     setSettingsError('');
@@ -124,21 +116,29 @@ export default function AdminLayout() {
     e.preventDefault();
     setSettingsError('');
     const trimmed = settingsEmail.trim().toLowerCase();
+    if (!settingsCurrentPw) {
+      setSettingsError('Please enter your current password.');
+      return;
+    }
     if (!trimmed || !trimmed.includes('@')) {
       setSettingsError('Please enter a valid email address.');
       return;
     }
-    if (settingsPw.length < 6) {
-      setSettingsError('New password must be at least 6 characters.');
+    if (settingsPw.length < 8) {
+      setSettingsError('New password must be at least 8 characters.');
       return;
     }
     if (settingsPw !== settingsConfirmPw) {
       setSettingsError('Passwords do not match.');
       return;
     }
-    updateAdminCredentials(trimmed, settingsPw);
-    await flushToCodebase();
-    setAdminEmail(trimmed);
+    setIsSavingSettings(true);
+    const res = await changePassword(settingsCurrentPw, trimmed, settingsPw);
+    setIsSavingSettings(false);
+    if (!res.success) {
+      setSettingsError(res.error || 'Failed to update credentials.');
+      return;
+    }
     setSettingsSuccess(true);
     setTimeout(() => {
       setSettingsSuccess(false);
@@ -425,6 +425,31 @@ export default function AdminLayout() {
               <form onSubmit={handleSaveSettings} className="space-y-4 pt-1">
                 <div>
                   <label className="block text-[11px] font-semibold text-[#77736A] uppercase tracking-wider mb-1.5">
+                    Current Password
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showSettingsCurrentPw ? 'text' : 'password'}
+                      value={settingsCurrentPw}
+                      onChange={(e) => setSettingsCurrentPw(e.target.value)}
+                      placeholder="Enter your current password"
+                      className="w-full bg-[#0a1210] border border-[#1e3530] focus:border-[#B78A3B] text-[#FAF7F0] rounded-xl pl-10 pr-10 py-2.5 text-xs sm:text-sm outline-none transition-colors"
+                      required
+                      autoComplete="current-password"
+                    />
+                    <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#77736A]" />
+                    <button
+                      type="button"
+                      onClick={() => setShowSettingsCurrentPw(!showSettingsCurrentPw)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#77736A] hover:text-[#FAF7F0] cursor-pointer"
+                    >
+                      {showSettingsCurrentPw ? <EyeOff size={15} /> : <Eye size={15} />}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold text-[#77736A] uppercase tracking-wider mb-1.5">
                     Admin Email Address
                   </label>
                   <div className="relative">
@@ -449,7 +474,7 @@ export default function AdminLayout() {
                       type={showSettingsPw ? 'text' : 'password'}
                       value={settingsPw}
                       onChange={(e) => setSettingsPw(e.target.value)}
-                      placeholder="At least 6 characters"
+                      placeholder="At least 8 characters"
                       className="w-full bg-[#0a1210] border border-[#1e3530] focus:border-[#B78A3B] text-[#FAF7F0] rounded-xl pl-10 pr-10 py-2.5 text-xs sm:text-sm outline-none transition-colors"
                       required
                     />
@@ -505,9 +530,10 @@ export default function AdminLayout() {
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#B78A3B] hover:bg-[#D8B86A] text-[#0a1210] font-bold shadow-md transition-colors cursor-pointer"
+                    disabled={isSavingSettings}
+                    className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#B78A3B] hover:bg-[#D8B86A] disabled:opacity-50 text-[#0a1210] font-bold shadow-md transition-colors cursor-pointer"
                   >
-                    Save Credentials
+                    {isSavingSettings ? 'Saving...' : 'Save Credentials'}
                   </button>
                 </div>
               </form>

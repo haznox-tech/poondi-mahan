@@ -13,7 +13,6 @@ import {
   getRecentlyDeletedItems,
   getAllVideos,
   getRecentlyDeletedVideos,
-  getCredentials,
   saveAllGalleryItems,
   compressImageFile,
 } from './adminStore.js';
@@ -294,7 +293,6 @@ export async function syncGalleryDataJsonToGitHub(overrideItems = null, token = 
     trash: getRecentlyDeletedItems(),
     videos: getAllVideos(),
     videoTrash: getRecentlyDeletedVideos(),
-    credentials: getCredentials(),
   };
 
   const jsonStr = JSON.stringify(payload, null, 2);

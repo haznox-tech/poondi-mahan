@@ -16,18 +16,16 @@ import { syncGalleryDataJsonToGitHub, hasGitHubToken } from './githubSync.js';
 const STORAGE_KEYS = {
   CLOUD_NAME: 'pm_cloudinary_cloud_name',
   UPLOAD_PRESET: 'pm_cloudinary_upload_preset',
-  API_KEY: 'pm_cloudinary_api_key',
-  API_SECRET: 'pm_cloudinary_api_secret',
 };
 
 /**
  * Retrieves Cloudinary configuration from environment variables or localStorage.
- * No hardcoded fallback credentials — must be configured explicitly via
- * .env (VITE_CLOUDINARY_*) or the admin Cloudinary Settings panel.
+ * Only cloud name + unsigned upload preset are needed client-side — the API
+ * key/secret used for deletion live on the server only (server/galleryRoutes.js).
  */
 export function getCloudinaryConfig() {
   if (typeof window === 'undefined') {
-    return { cloudName: '', uploadPreset: '', apiKey: '', apiSecret: '' };
+    return { cloudName: '', uploadPreset: '' };
   }
 
   const cloudName =
@@ -43,21 +41,13 @@ export function getCloudinaryConfig() {
     uploadPreset = 'poondi_gallery';
   }
 
-  const apiKey =
-    (import.meta.env?.VITE_CLOUDINARY_API_KEY || '').trim() ||
-    (localStorage.getItem(STORAGE_KEYS.API_KEY) || '').trim();
-
-  const apiSecret =
-    (import.meta.env?.VITE_CLOUDINARY_API_SECRET || '').trim() ||
-    (localStorage.getItem(STORAGE_KEYS.API_SECRET) || '').trim();
-
-  return { cloudName, uploadPreset, apiKey, apiSecret };
+  return { cloudName, uploadPreset };
 }
 
 /**
  * Saves Cloudinary configuration to localStorage.
  */
-export function setCloudinaryConfig({ cloudName, uploadPreset, apiKey, apiSecret }) {
+export function setCloudinaryConfig({ cloudName, uploadPreset }) {
   if (typeof window === 'undefined') return;
 
   if (cloudName !== undefined) {
@@ -68,16 +58,6 @@ export function setCloudinaryConfig({ cloudName, uploadPreset, apiKey, apiSecret
   if (uploadPreset !== undefined) {
     if (uploadPreset) localStorage.setItem(STORAGE_KEYS.UPLOAD_PRESET, uploadPreset.trim());
     else localStorage.removeItem(STORAGE_KEYS.UPLOAD_PRESET);
-  }
-
-  if (apiKey !== undefined) {
-    if (apiKey) localStorage.setItem(STORAGE_KEYS.API_KEY, apiKey.trim());
-    else localStorage.removeItem(STORAGE_KEYS.API_KEY);
-  }
-
-  if (apiSecret !== undefined) {
-    if (apiSecret) localStorage.setItem(STORAGE_KEYS.API_SECRET, apiSecret.trim());
-    else localStorage.removeItem(STORAGE_KEYS.API_SECRET);
   }
 }
 
@@ -270,69 +250,28 @@ export function extractCloudinaryPublicId(urlOrId) {
 
 /**
  * Deletes an image from Cloudinary using its public_id or full URL.
- * Supports:
- * 1. Serverless endpoints (/api/cloudinary-delete and /api/cloudinary/delete)
- * 2. Client-side SHA-1 signed request fallback
+ * Always routes through the authenticated server endpoint — the API secret
+ * never leaves the server, and the request is only honored for a logged-in
+ * admin session.
  */
 export async function deleteImageFromCloudinary(publicIdOrUrl) {
   const publicId = extractCloudinaryPublicId(publicIdOrUrl);
   if (!publicId) return false;
 
-  const { cloudName, apiKey, apiSecret } = getCloudinaryConfig();
-
-  // Try serverless endpoints first (works on Vercel and local dev)
-  const endpoints = ['/api/cloudinary-delete', '/api/cloudinary/delete'];
-  for (const endpoint of endpoints) {
-    try {
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ publicId, cloudName, apiKey, apiSecret }),
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        if (data.ok || data.result === 'ok') {
-          return true;
-        }
-      }
-    } catch {
-      // try next endpoint
-    }
+  try {
+    const res = await fetch('/api/cloudinary/delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ publicId }),
+    });
+    if (!res.ok) return false;
+    const data = await res.json();
+    return Boolean(data.ok || data.result === 'ok');
+  } catch (err) {
+    console.warn('[cloudinarySync] Cloudinary delete failed:', err);
+    return false;
   }
-
-  // Fallback: Client-side signed destroy via Cloudinary API
-  if (cloudName && apiKey && apiSecret) {
-    try {
-      const timestamp = Math.round(Date.now() / 1000);
-      const strToSign = `public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
-
-      // SHA-1 in browser Web Crypto API
-      const encoder = new TextEncoder();
-      const data = encoder.encode(strToSign);
-      const hashBuffer = await crypto.subtle.digest('SHA-1', data);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      const signature = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
-
-      const formData = new FormData();
-      formData.append('public_id', publicId);
-      formData.append('api_key', apiKey);
-      formData.append('timestamp', timestamp);
-      formData.append('signature', signature);
-
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/destroy`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      const resData = await res.json();
-      return resData.result === 'ok';
-    } catch (err) {
-      console.warn('[cloudinarySync] Direct destroy failed:', err);
-    }
-  }
-
-  return false;
 }
 
 /**

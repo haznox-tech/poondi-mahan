@@ -1,5 +1,10 @@
 # React + Vite
 
+For production deployment to a ResellerClub VPS via cPanel terminal, see
+[DEPLOYMENT.md](./DEPLOYMENT.md). For local development, run `npm run server`
+(the Express API on port 3001) and `npm run dev` (Vite, proxying `/api` to
+the server) in two terminals.
+
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
 Currently, two official plugins are available:
