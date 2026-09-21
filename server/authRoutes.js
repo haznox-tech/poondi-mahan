@@ -17,52 +17,65 @@ const router = express.Router();
 
 const MAX_ATTEMPTS = 3;
 const LOCKOUT_DURATION_MS = 3 * 60 * 60 * 1000; // 3 hours
-const loginAttempts = new Map(); // ip -> { attempts, lockedUntil }
+// Keyed by IP (bounds a single attacker) AND by account email (bounds a
+// distributed/botnet attack against the one admin account regardless of
+// how many source IPs are used).
+const loginAttemptsByIp = new Map(); // ip -> { attempts, lockedUntil }
+const loginAttemptsByAccount = new Map(); // email -> { attempts, lockedUntil }
 
-function getLoginState(ip) {
-  return loginAttempts.get(ip) || { attempts: 0, lockedUntil: null };
+function getLoginState(map, key) {
+  return map.get(key) || { attempts: 0, lockedUntil: null };
 }
 
-function isLockedOut(ip) {
-  const state = getLoginState(ip);
+function isLockedOut(map, key) {
+  const state = getLoginState(map, key);
   if (state.lockedUntil && Date.now() < state.lockedUntil) return state.lockedUntil;
   if (state.lockedUntil && Date.now() >= state.lockedUntil) {
-    loginAttempts.set(ip, { attempts: 0, lockedUntil: null });
+    map.set(key, { attempts: 0, lockedUntil: null });
   }
   return null;
 }
 
-function recordFailedLogin(ip) {
-  const state = getLoginState(ip);
+function recordFailedLogin(map, key) {
+  const state = getLoginState(map, key);
   const attempts = state.attempts + 1;
   const lockedUntil = attempts >= MAX_ATTEMPTS ? Date.now() + LOCKOUT_DURATION_MS : null;
-  loginAttempts.set(ip, { attempts, lockedUntil });
+  map.set(key, { attempts, lockedUntil });
   return { attempts, lockedUntil };
 }
 
-function resetLoginState(ip) {
-  loginAttempts.set(ip, { attempts: 0, lockedUntil: null });
+function resetLoginState(map, key) {
+  map.set(key, { attempts: 0, lockedUntil: null });
 }
 
+// Relies on Express's `trust proxy` setting (configured in server/index.js)
+// to resolve the real client IP, rather than trusting a raw, spoofable
+// X-Forwarded-For header directly.
 function clientIp(req) {
-  return req.headers['x-forwarded-for']?.split(',')[0].trim() || req.socket.remoteAddress || 'local';
+  return req.ip || req.socket.remoteAddress || 'local';
 }
 
 // ── POST /login ────────────────────────────────────────────────────────────
 router.post('/login', (req, res) => {
   const ip = clientIp(req);
-  const lockedUntil = isLockedOut(ip);
+  const creds = getAdminCredentials();
+
+  const ipLockedUntil = isLockedOut(loginAttemptsByIp, ip);
+  const accountLockedUntil = isLockedOut(loginAttemptsByAccount, creds.email);
+  const lockedUntil = ipLockedUntil && accountLockedUntil
+    ? Math.max(ipLockedUntil, accountLockedUntil)
+    : (ipLockedUntil || accountLockedUntil);
   if (lockedUntil) {
     return res.json({ ok: false, locked: true, lockoutUntil: lockedUntil });
   }
 
   const { email, password } = req.body || {};
-  const creds = getAdminCredentials();
   const emailMatches = (email || '').trim().toLowerCase() === creds.email;
   const passwordMatches = emailMatches && verifyAdminPassword(password);
 
   if (!emailMatches || !passwordMatches) {
-    const { attempts, lockedUntil: newLockout } = recordFailedLogin(ip);
+    recordFailedLogin(loginAttemptsByIp, ip);
+    const { attempts, lockedUntil: newLockout } = recordFailedLogin(loginAttemptsByAccount, creds.email);
     return res.json({
       ok: false,
       locked: Boolean(newLockout),
@@ -71,7 +84,8 @@ router.post('/login', (req, res) => {
     });
   }
 
-  resetLoginState(ip);
+  resetLoginState(loginAttemptsByIp, ip);
+  resetLoginState(loginAttemptsByAccount, creds.email);
   const sessionId = createSession(creds.email);
   res.cookie(SESSION_COOKIE, sessionId, cookieOptions(req));
   res.json({ ok: true, email: creds.email });
@@ -88,8 +102,13 @@ router.post('/logout', (req, res) => {
 router.get('/session', (req, res) => {
   const sessionId = req.cookies?.[SESSION_COOKIE];
   const ip = clientIp(req);
-  const lockedUntil = isLockedOut(ip);
-  const state = getLoginState(ip);
+  const creds = getAdminCredentials();
+  const ipLockedUntil = isLockedOut(loginAttemptsByIp, ip);
+  const accountLockedUntil = isLockedOut(loginAttemptsByAccount, creds.email);
+  const lockedUntil = ipLockedUntil && accountLockedUntil
+    ? Math.max(ipLockedUntil, accountLockedUntil)
+    : (ipLockedUntil || accountLockedUntil);
+  const state = getLoginState(loginAttemptsByAccount, creds.email);
 
   const session = getSession(sessionId);
   res.json({
@@ -226,7 +245,8 @@ router.post('/reset-password', (req, res) => {
 
   verifiedTokens.delete(verificationToken);
   setAdminCredentials(normalizedEmail, newPassword);
-  resetLoginState(clientIp(req));
+  resetLoginState(loginAttemptsByIp, clientIp(req));
+  resetLoginState(loginAttemptsByAccount, normalizedEmail);
 
   res.json({ ok: true, message: 'Password updated successfully!' });
 });

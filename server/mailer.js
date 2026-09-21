@@ -12,19 +12,30 @@ function getSmtpConfig() {
   };
 }
 
+function maskEmail(email) {
+  if (!email || !email.includes('@')) return email;
+  const [user, domain] = email.split('@');
+  if (user.length <= 2) return `${user[0]}*@${domain}`;
+  return `${user[0]}${'*'.repeat(Math.min(user.length - 2, 5))}${user.slice(-1)}@${domain}`;
+}
+
 export async function sendOtpEmail(toEmail, otpCode) {
   const smtp = getSmtpConfig();
 
-  console.log('\n======================================================');
-  console.log(`📧 [OTP EMAIL] Verification code for: ${toEmail}`);
-  console.log(`🔑 6-Digit OTP: ${otpCode}`);
-  console.log('⏱️  Valid for 10 minutes | Resend cooldown: 30s');
-  console.log('======================================================\n');
-
   if (!smtp.user || !smtp.pass) {
+    // No SMTP configured — the console is the only delivery channel available,
+    // so the OTP must be printed here for the admin to complete recovery.
+    // Once SMTP is configured, the code is emailed only and never logged.
+    console.log('\n======================================================');
+    console.log(`📧 [OTP EMAIL] Verification code for: ${toEmail}`);
+    console.log(`🔑 6-Digit OTP: ${otpCode}`);
+    console.log('⏱️  Valid for 10 minutes | Resend cooldown: 30s');
     console.warn('⚠️  [OTP EMAIL] SMTP credentials not set — OTP shown in server log only.');
+    console.log('======================================================\n');
     return { emailSent: false, error: '' };
   }
+
+  console.log(`📧 [OTP EMAIL] Sending verification code to ${maskEmail(toEmail)}...`);
 
   try {
     const transporter = nodemailer.createTransport({
@@ -76,7 +87,7 @@ export async function sendOtpEmail(toEmail, otpCode) {
 </body>
 </html>`,
     });
-    console.log(`✅ [OTP EMAIL] Sent to ${toEmail} successfully.`);
+    console.log(`✅ [OTP EMAIL] Sent to ${maskEmail(toEmail)} successfully.`);
     return { emailSent: true, error: '' };
   } catch (err) {
     console.error('❌ [OTP EMAIL] Failed to send email!', err.message);

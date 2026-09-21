@@ -14,7 +14,22 @@ const SALT_ROUNDS = 12;
 
 function ensureDataDir() {
   if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+    fs.mkdirSync(DATA_DIR, { recursive: true, mode: 0o700 });
+  } else {
+    try {
+      fs.chmodSync(DATA_DIR, 0o700);
+    } catch {
+      // best-effort — some filesystems (e.g. certain network mounts) don't support chmod
+    }
+  }
+}
+
+function writeCredentialsFile(record) {
+  fs.writeFileSync(CREDENTIALS_FILE, JSON.stringify(record, null, 2), { encoding: 'utf-8', mode: 0o600 });
+  try {
+    fs.chmodSync(CREDENTIALS_FILE, 0o600);
+  } catch {
+    // best-effort — mode on writeFileSync is only applied when the file is created
   }
 }
 
@@ -30,6 +45,11 @@ export function loadOrInitCredentials() {
   ensureDataDir();
 
   if (fs.existsSync(CREDENTIALS_FILE)) {
+    try {
+      fs.chmodSync(CREDENTIALS_FILE, 0o600);
+    } catch {
+      // best-effort
+    }
     const raw = JSON.parse(fs.readFileSync(CREDENTIALS_FILE, 'utf-8'));
     if (raw && raw.email && raw.passwordHash) return raw;
   }
@@ -41,7 +61,7 @@ export function loadOrInitCredentials() {
   const passwordHash = bcrypt.hashSync(password, SALT_ROUNDS);
   const record = { email, passwordHash };
 
-  fs.writeFileSync(CREDENTIALS_FILE, JSON.stringify(record, null, 2), 'utf-8');
+  writeCredentialsFile(record);
 
   console.log('\n======================================================');
   console.log('🔐 [ADMIN SETUP] No admin credentials found — generated one.');
@@ -74,6 +94,6 @@ export function setAdminCredentials(email, password) {
     email: (email || current.email).trim().toLowerCase(),
     passwordHash: password ? bcrypt.hashSync(String(password), SALT_ROUNDS) : current.passwordHash,
   };
-  fs.writeFileSync(CREDENTIALS_FILE, JSON.stringify(record, null, 2), 'utf-8');
+  writeCredentialsFile(record);
   return record;
 }
