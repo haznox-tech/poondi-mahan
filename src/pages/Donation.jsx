@@ -57,7 +57,7 @@ const bankDetails = {
   accountName: "SRI POONDIMAHAN ATTRU SWAMY ASHRAMAM",
   accountNumber: "11610100005278",
   ifsc: "UCBA0001161",
-  branch: "Kalasapakkam",
+  branch: "Vellore",
 };
 
 async function copyToClipboard(text) {
