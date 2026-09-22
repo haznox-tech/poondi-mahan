@@ -25,6 +25,12 @@ app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api', galleryRoutes);
 
+// Uploaded gallery images are written to public/ at runtime, after the Vite
+// build already produced a frozen dist/ snapshot — dist/ alone never sees
+// them, so serve this directory directly.
+const UPLOADED_IMAGES_DIR = path.resolve(process.cwd(), 'public/images/gallery/uploaded');
+app.use('/images/gallery/uploaded', express.static(UPLOADED_IMAGES_DIR));
+
 if (fs.existsSync(DIST_DIR)) {
   app.use(express.static(DIST_DIR, { index: false }));
   app.get(/^(?!\/api\/).*/, (req, res) => {
